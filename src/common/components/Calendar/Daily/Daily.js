@@ -1,29 +1,45 @@
-import React from "react";
+import React from 'react';
+import styled from 'styled-components';
+import store from '../../../../app/configureStore';
+import Row from '../Row/Row';
 
-function Daily() {
+const StyledDayDiv = styled.div`
+  width: 40px;
+  line-height: 40px;
+  text-align: center;
+  border: 1px solid blue;
+  border-radius: 5px;
+  margin-bottom: 20px;
+`;
+
+function Daily({ onOpenDaily }) {
+  onOpenDaily(true);
+  const currentDay = store.getState().calendar;
+  const week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
   return (
-    <table>
-      <thead>
-        <tr>
-          <td>Time</td>
-          <td>Event</td>
-        </tr>
-      </thead>
-      <tbody>
-        {Array.from(Array(24).keys()).map((hour) => (
-          <>
-            <tr>
-              <td>{`${hour}:00 - ${hour}:30`}</td>
-              <td>Event 1</td>
-            </tr>
-            <tr>
-              <td>{`${hour}:30 - ${hour + 1}:00`}</td>
-              <td>Event 2</td>
-            </tr>
-          </>
-        ))}
-      </tbody>
-    </table>
+    <>
+      <div>{week[currentDay.displayedDay]}</div>
+      <StyledDayDiv>{currentDay.displayedDate}</StyledDayDiv>
+      <table>
+        <thead>
+          <tr>
+            <td>Time</td>
+            <td>Event</td>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from(Array(24).keys()).map((hour) => (
+            <>
+              <tr>
+                <td>{`${hour}:00 - ${hour + 1}:00`}</td>
+                <td><Row /></td>
+              </tr>
+            </>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 }
 

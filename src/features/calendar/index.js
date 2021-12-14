@@ -1,5 +1,5 @@
-import { showNextMonth } from "./actions";
-import calendarReducer from "./reducers";
+import { showNextDate, showPreviousDate, showNextWeek, showPreviousWeek } from './actions';
+import calendarReducer from './reducers';
 
-export { showNextMonth };
+export { showNextDate, showPreviousDate, showNextWeek, showPreviousWeek};
 export default calendarReducer;

@@ -1,21 +1,52 @@
-import { SHOW_NEXT_MONTH } from "./types";
+import { SHOW_NEXT_DATE, SHOW_PREVIOUS_DATE, SHOW_NEXT_WEEK, SHOW_PREVIOUS_WEEK} from './types';
 
 const today = new Date();
 
 const initialState = {
   currentDate: today,
-  displayedMonth: today.getMonth(),
+  displayedYear: today.getFullYear(),
+  displayedMonth: today.getMonth() + 1,
+  displayedDate: today.getDate(),
+  displayedDay: today.getDay(),
+};
+
+const saveNewDay = (nextState, target) => {
+  nextState.currentDate = target;
+  nextState.displayedYear = target.getFullYear();
+  nextState.displayedMonth = target.getMonth() + 1;
+  nextState.displayedDate = target.getDate();
+  nextState.displayedDay = target.getDay();
 };
 
 export default function calendarReducer(state = initialState, action) {
-  switch (action.type) {
-    case SHOW_NEXT_MONTH:
-      const newState = Object.assign({}, state);
+  const newState = Object.assign({}, state);
 
-      newState.displayedMonth = state.displayedMonth + 1;
+  switch (action.type) {
+    case SHOW_NEXT_DATE:
+      const nextDay = new Date(today.setDate(today.getDate() + 1));
+      saveNewDay(newState, nextDay);
 
       return newState;
+
+    case SHOW_PREVIOUS_DATE:
+      const previousDay = new Date(today.setDate(today.getDate() - 1));
+      saveNewDay(newState, previousDay);
+
+      return newState;
+
+    case SHOW_NEXT_WEEK:
+      const nextWeek = new Date(today.setDate(today.getDate() + 7));
+      saveNewDay(newState, nextWeek);
+
+      return newState;
+
+    case SHOW_PREVIOUS_WEEK:
+      const previousWeek = new Date(today.setDate(today.getDate() - 7));
+      saveNewDay(newState, previousWeek);
+
+      return newState;
+
     default:
-      return Object.assign({}, state);
+      return newState;
   }
 }
