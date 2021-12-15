@@ -1,0 +1,1 @@
+export const SAVE_NEW_EVENT = 'app/event/SAVE_NEW_EVENT';

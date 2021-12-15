@@ -1,26 +1,26 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import store from '../../../../app/configureStore';
 import Row from '../Row/Row';
 
 function Week({ onOpenDaily }) {
   onOpenDaily(false);
 
-  const currentDay = store.getState().calendar;
-  const theYear = currentDay.displayedYear;
-  const theMonth = currentDay.displayedMonth;
-  const theDate  = currentDay.displayedDate;
-  const theDayOfWeek = currentDay.displayedDay;
+  const current = store.getState().calendar;
   const thisWeek = [];
 
   for(let i = 0; i < 7; i++) {
-    const resultDay = new Date(theYear, theMonth - 1, theDate + (i - theDayOfWeek));
+    const resultDay =
+      new Date(
+        current.displayedYear,
+        current.displayedMonth - 1,
+        current.displayedDate + (i - current.displayedDay),
+      );
     let day = resultDay.getDate();
-
     day = String(day).length === 1 ? '0' + day : day;
 
     thisWeek[i] = day;
   }
-  console.log(thisWeek);
 
   return (
     <>
@@ -75,3 +75,18 @@ function Week({ onOpenDaily }) {
 }
 
 export default Week;
+
+/*
+const history = useHistory();
+
+const time = Array.from(Array(24).keys());
+
+time.map((hour) => (
+  <Row
+    id={hour}
+    onClick={() => {
+      history.push(`/events/new?time=${hour}`)
+    }}>
+
+  </Row>))
+*/

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { noop } from 'lodash';
 import { Link } from 'react-router-dom';
 
-function Row({ onClick = noop, event = {} }) {
+function Row({ onClick = noop, event = { } }) {
   const eventKey = Object.keys(event);
 
   return (

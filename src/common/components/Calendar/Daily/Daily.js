@@ -33,7 +33,7 @@ function Daily({ onOpenDaily }) {
             <>
               <tr>
                 <td>{`${hour}:00 - ${hour + 1}:00`}</td>
-                <td><Row /></td>
+                <td><Row event={{title:'밥 먹기'}}/></td>
               </tr>
             </>
           ))}

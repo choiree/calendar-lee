@@ -4,15 +4,15 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import Header from '../common/components/Header/Header';
 import Daily from '../common/components/Calendar/Daily/Daily';
 import Week from '../common/components/Calendar/Week/Week';
-import store from './configureStore';
 import { useDispatch, useSelector } from 'react-redux';
 import { showNextDate, showNextWeek, showPreviousDate, showPreviousWeek } from '../features/calendar';
+import New from '../common/components/Event/New/New';
+import Detail from '../common/components/Event/Detail/Detail';
 
 function App() {
   const dispatch = useDispatch();
   const [isDaily, setIsDaily] = useState(false);
-  const current = store.getState().calendar;
-  const date = useSelector((state) => state.calendar.currentDate);
+  const date = useSelector((state) => state.calendar);
 
   const handleChangePreDay = () => {
     dispatch(showPreviousDate());
@@ -30,12 +30,18 @@ function App() {
     dispatch(showNextWeek());
   }
 
+  // const history = useHistory();
+
+  //   React.useEffect(() => {
+  //       history.push('/helloWorld'); // 마운트 될 때 /helloWorld에 해당하는 페이지로 이동
+  //   }, [])
+
   return (
     <div>
       {isDaily &&
         <Header
           displayDate={
-            <div>{current.displayedYear}년{current.displayedMonth}월{current.displayedDate}일</div>
+            <div>{date.displayedYear}년{date.displayedMonth}월{date.displayedDate}일</div>
           }
           onChangePre={handleChangePreDay}
           onChangeNext={handleChangeNextDay}
@@ -43,7 +49,7 @@ function App() {
       {!isDaily &&
         <Header
           displayDate={
-            <div>{current.displayedYear}년{current.displayedMonth}월</div>
+            <div>{date.displayedYear}년{date.displayedMonth}월</div>
           }
           onChangePre={handleChangePreWeek}
           onChangeNext={handleChangeNextWeek}
@@ -57,6 +63,12 @@ function App() {
         </Route>
         <Route path="/week">
           <Week onOpenDaily={setIsDaily}/>
+        </Route>
+        <Route path="/events/new" exact>
+          <New />
+        </Route>
+        <Route path="/events/:eventId" exact>
+          <Detail />
         </Route>
       </Switch>
     </div>
