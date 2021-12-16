@@ -30,12 +30,6 @@ function App() {
     dispatch(showNextWeek());
   }
 
-  // const history = useHistory();
-
-  //   React.useEffect(() => {
-  //       history.push('/helloWorld'); // 마운트 될 때 /helloWorld에 해당하는 페이지로 이동
-  //   }, [])
-
   return (
     <div>
       {isDaily &&

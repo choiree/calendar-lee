@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { isElement } from 'react-dom/cjs/react-dom-test-utils.production.min';
 import { useDispatch } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
 import store from '../../../../app/configureStore';
 import { saveNewEvent } from '../../../../features/event';
@@ -14,11 +17,14 @@ const StyledForm = styled.form`
 `;
 
 function New() {
+  const location = useLocation();
+  const history = useHistory();
+
   const dispatch = useDispatch();
   const [titleValue, setTitleValue] = useState('');
   const [contentValue, setContentValue] = useState('');
-  const [selectedStart, setSelectedStart] = useState('');
-  const [selectedEnd, setSelectedEnd] = useState('');
+  const [selectedStart, setSelectedStart] = useState(location.state.hour);
+  const [selectedEnd, setSelectedEnd] = useState(location.state.hour + 1);
 
   const handleChangeTitle = (e) => {
     setTitleValue(e.target.value);
@@ -33,33 +39,90 @@ function New() {
     setSelectedEnd(e.target.value);
   }
 
+  const enrollDate = store.getState().calendar;
+  const resultDay = new Date(
+    enrollDate.displayedYear,
+    enrollDate.displayedMonth - 1,
+    enrollDate.displayedDate + (location.state.day - enrollDate.displayedDate),
+  );
+
+  const dateString = resultDay.toLocaleString().substring(0,12).replaceAll(' ', '');
+  const eventArr = store.getState().event.byDate[dateString];
+  let eventList = [];
+
+  if (eventArr) {
+    eventList = eventArr.map((item) => store.getState().event.byIds[item]);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(saveNewEvent(titleValue, contentValue, selectedStart, selectedEnd, resultDay));
+    history.push('/calendar');
+    // console.log("지금데이", resultDay);
+    // console.log("day값 : ", location.state.day, "캘린더저장날짜 : ", store.getState().calendar.displayedDate);
+  };
+
   return (
     <>
       <h1>이벤트 추가하는 페이지</h1>
-      <StyledForm className='my-form' onSubmit={(e) => {
-        e.preventDefault();
-        const enrollDate = store.getState().calendar.currentDate;
-        dispatch(saveNewEvent(titleValue, contentValue, selectedStart, selectedEnd, enrollDate));
-        console.log(enrollDate);
-        console.log(123,selectedStart, selectedEnd, titleValue,'contentValue:',contentValue);
-      }}>
-        <input type='text' placeholder='제목...' value={titleValue} onChange={handleChangeTitle} required/>
-        <textarea placeholder='설명...' value={contentValue} onChange={handleChangeContent} rows='5' cols='33'></textarea>
+      <StyledForm className='my-form' onSubmit={handleSubmit}>
+        <input
+          type='text'
+          placeholder='제목...'
+          value={titleValue}
+          onChange={handleChangeTitle}
+          required
+        />
+        <textarea
+          placeholder='설명...'
+          value={contentValue}
+          onChange={handleChangeContent}
+          rows='5'
+          cols='33'>
+        </textarea>
         <div>
-          <label for='start-time'>시작시간 : </label>
-
-          <select name='start' id='start-time' value={selectedStart} onChange={handleChangeStart}>
-            {Array.from(Array(24).keys()).map((hour) => (
-              <option value={hour}>{`${hour}:00`}</option>
-            ))}
+          <label htmlFor='start-time'>시작시간 : </label>
+          <select
+            name='start'
+            id='start-time'
+            value={selectedStart}
+            onChange={handleChangeStart}
+          >
+            {eventList.length
+              ? Array.from(Array(24).keys()).map((hour) => {
+                if (eventList.some((event) => {return event.startTime <= hour && event.endTime > hour})) {
+                  return(<option value={hour} disabled>{hour}:00</option>);
+                }
+                return(<option value={hour}>{hour}:00</option>);
+                })
+              : Array.from(Array(24).keys()).map((hour) => (
+                <option key={hour} value={hour}>
+                  {hour}:00
+                </option>
+              ))
+            }
           </select>
 
-          <label for='end-time'> 끝나는 시간 : </label>
-
-          <select name='end' id='end-time' value={selectedEnd} onChange={handleChangeEnd}>
-            {Array.from(Array(24).keys()).map((hour) => (
-              <option value={hour + 1}>{`${hour + 1}:00`}</option>
-            ))}
+          <label htmlFor='end-time'> 끝나는 시간 : </label>
+          <select
+            name='end'
+            id='end-time'
+            value={selectedEnd}
+            onChange={handleChangeEnd}
+          >
+            {eventList.length
+              ? Array.from(Array(24).keys()).map((hour) => {
+                if (eventList.some((event) => {return event.startTime <= hour && event.endTime > hour})) {
+                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                }
+                return(<option value={hour + 1}>{hour + 1}:00</option>);
+                })
+              : Array.from(Array(24).keys()).map((hour) => (
+                <option key={hour} value={hour + 1}>
+                  {hour + 1}:00
+                </option>
+              ))
+            }
           </select>
         </div>
 

@@ -1,4 +1,4 @@
-import { SAVE_NEW_EVENT } from './types';
+import { SAVE_NEW_EVENT, DELETE_EVENT } from './types';
 
 export function saveNewEvent(title, content, startTime, endTime, date) {
   return {
@@ -10,6 +10,16 @@ export function saveNewEvent(title, content, startTime, endTime, date) {
       startTime,
       endTime,
       date,
+    }
+  };
+}
+
+export function deleteEvent(deleteId, currentDate) {
+  return {
+    type: DELETE_EVENT,
+    payload: {
+      deleteId,
+      currentDate,
     }
   };
 }
