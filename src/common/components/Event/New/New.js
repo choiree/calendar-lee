@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { isElement } from 'react-dom/cjs/react-dom-test-utils.production.min';
-import { useDispatch } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
 import store from '../../../../app/configureStore';
@@ -19,33 +18,17 @@ const StyledForm = styled.form`
 function New() {
   const location = useLocation();
   const history = useHistory();
-
   const dispatch = useDispatch();
   const [titleValue, setTitleValue] = useState('');
   const [contentValue, setContentValue] = useState('');
   const [selectedStart, setSelectedStart] = useState(location.state.hour);
   const [selectedEnd, setSelectedEnd] = useState(location.state.hour + 1);
-
-  const handleChangeTitle = (e) => {
-    setTitleValue(e.target.value);
-  };
-  const handleChangeContent = (e) => {
-    setContentValue(e.target.value);
-  };
-  const handleChangeStart = (e) => {
-    setSelectedStart(e.target.value);
-  };
-  const handleChangeEnd = (e) => {
-    setSelectedEnd(e.target.value);
-  }
-
-  const enrollDate = store.getState().calendar;
+  const enrollDate = useSelector((state) => state.calendar);
   const resultDay = new Date(
     enrollDate.displayedYear,
     enrollDate.displayedMonth - 1,
     enrollDate.displayedDate + (location.state.day - enrollDate.displayedDate),
   );
-
   const dateString = resultDay.toLocaleString().substring(0,12).replaceAll(' ', '');
   const eventArr = store.getState().event.byDate[dateString];
   let eventList = [];
@@ -57,15 +40,27 @@ function New() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(saveNewEvent(titleValue, contentValue, selectedStart, selectedEnd, resultDay));
-    // history.push('/calendar');
     history.goBack();
-    // console.log("지금데이", resultDay);
-    // console.log("day값 : ", location.state.day, "캘린더저장날짜 : ", store.getState().calendar.displayedDate);
+  };
+
+  const handleChangeTitle = (e) => {
+    setTitleValue(e.target.value);
+  };
+
+  const handleChangeContent = (e) => {
+    setContentValue(e.target.value);
+  };
+
+  const handleChangeStart = (e) => {
+    setSelectedStart(e.target.value);
+  };
+
+  const handleChangeEnd = (e) => {
+    setSelectedEnd(e.target.value);
   };
 
   return (
     <>
-      <h1>이벤트 추가하는 페이지</h1>
       <StyledForm className='my-form' onSubmit={handleSubmit}>
         <input
           type='text'
@@ -103,7 +98,6 @@ function New() {
               ))
             }
           </select>
-
           <label htmlFor='end-time'> 끝나는 시간 : </label>
           <select
             name='end'
@@ -126,7 +120,6 @@ function New() {
             }
           </select>
         </div>
-
         <input type='submit' value='Save' />
       </StyledForm>
     </>

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-// import store from "../../../app/configureStore";
+import { showToday } from '../../../features/calendar';
 
 const StyledNextDateButton = styled.button`
   background: none;
@@ -28,6 +29,14 @@ const StyledDateWrapperDiv = styled.div`
 
 // TODO: Create your own header.
 export default function Header ({ displayDate, onChangePre, onChangeNext }) {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const handleChangeToday = () => {
+    const today = new Date();
+    dispatch(showToday(today));
+    history.push('/calendar');
+  };
+
   return (
     <StyledHeader>
       <nav>
@@ -41,6 +50,7 @@ export default function Header ({ displayDate, onChangePre, onChangeNext }) {
         <div>{displayDate}</div>
         <StyledNextDateButton onClick={onChangeNext}>{'>'}</StyledNextDateButton>
       </StyledDateWrapperDiv>
+      <button onClick={handleChangeToday}>Today</button>
     </StyledHeader>
   );
 }

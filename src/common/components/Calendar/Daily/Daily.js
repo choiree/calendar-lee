@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import store from '../../../../app/configureStore';
 import Time from '../Time/Time';
 import EventList from '../EventList/EventList';
+import { useSelector } from 'react-redux';
 
 const StyledDayDiv = styled.div`
   display: flex;
@@ -14,8 +14,8 @@ const StyledDayDiv = styled.div`
 function Daily({ onOpenDaily }) {
   onOpenDaily(true);
 
-  const currentDay = store.getState().calendar;
-  const day = store.getState().calendar.displayedDay;
+  const currentDay = useSelector(state => state.calendar);
+  const day = currentDay.displayedDay;
   const week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
   return (

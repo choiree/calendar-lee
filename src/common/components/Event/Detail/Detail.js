@@ -13,10 +13,12 @@ const StyledEventDiv = styled.div`
   padding: 5px 10px;
   border-radius: 7px;
 
-  .b {
+  .input {
     color : black;
     background: none;
     border: none;
+    font-size: 18px;
+    margin: 10px 0;
   }
 `;
 
@@ -33,20 +35,20 @@ function Detail() {
   const startTime = eventDetail.startTime;
   const endTime = eventDetail.endTime;
   const dateString = location.state.dateString;
-
   const dateStr = dateString.substring(0,4) + '-' + dateString.substring(5,7) + '-' + dateString.substring(8,10)
-
   const eventArr = store.getState().event.byDate[dateString];
-  let eventList = [];
-  if (eventArr) {
-    eventList = eventArr.map((item) => store.getState().event.byIds[item]);
-  }
+  const newEventArr = eventArr.filter((item) => item !== Number(eventId));
   const [eventTitle, setEventTile] = useState(title);
   const [eventContent, setEventContent] = useState(contnet);
   const [selectedStart, setSelectedStart] = useState(startTime);
   const [selectedEnd, setSelectedEnd] = useState(endTime);
   const [selectedDate, setSelectedDate] = useState(dateStr);
   const [isDisabled, setIsDisabled] = useState(true);
+  let eventList = [];
+
+  if (newEventArr) {
+    eventList = newEventArr.map((item) => store.getState().event.byIds[item]);
+  }
 
   const hadleChangeTitle = (e) => {
     setEventTile(e.target.value);
@@ -70,35 +72,49 @@ function Detail() {
 
   const handleDeleteBtn = () => {
     dispatch(deleteEvent(eventId, location.state.dateString));
-    history.push('/calendar');
+    history.push('/week');
   };
 
   const handleModifyBtn = () => {
     setIsDisabled((isDisabled) => (!isDisabled));
+
+    if (!isDisabled) {
+      history.goBack();
+    }
+
     dispatch(modifyEvent(eventId, dateString, eventTitle, eventContent, selectedStart, selectedEnd, selectedDate));
-  }
+  };
 
   return (
     <>
       {eventDetail &&
         <StyledEventDiv>
-          <h1>{location.state.dateString}</h1>
-          <input type='text' disabled={isDisabled} value={eventTitle} onChange={hadleChangeTitle} className='b'/>
+          <label for="date">날짜 : </label>
+          <input
+            type="date"
+            id="date"
+            name="trip-start"
+            disabled={isDisabled}
+            value={selectedDate}
+            onChange={handleChangeDate}
+            className='input'
+          />
+          <input
+            type='text'
+            disabled={isDisabled}
+            value={eventTitle}
+            onChange={hadleChangeTitle}
+            className='input'
+          />
           <textarea
             value={eventContent}
             onChange={hadleChangeContent}
-            className='b'
+            className='input'
             rows='5'
-            cols='35'
+            cols='22'
             disabled={isDisabled}
           >
           </textarea>
-
-          <label for="date">날짜 : </label>
-
-          <input type="date" id="date" name="trip-start" disabled={isDisabled}
-                value={selectedDate} onChange={handleChangeDate}/>
-
         <div>
           <label htmlFor='start-time'>시작시간 : </label>
           <select
@@ -107,6 +123,7 @@ function Detail() {
             value={selectedStart}
             onChange={handleChangeStart}
             disabled={isDisabled}
+            className='input'
           >
             {eventList.length
               ? Array.from(Array(24).keys()).map((hour) => {
@@ -130,6 +147,7 @@ function Detail() {
             value={selectedEnd}
             onChange={handleChangeEnd}
             disabled={isDisabled}
+            className='input'
           >
             {eventList.length
               ? Array.from(Array(24).keys()).map((hour) => {

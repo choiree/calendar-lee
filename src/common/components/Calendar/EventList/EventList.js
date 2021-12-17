@@ -23,7 +23,6 @@ const StyledTimeDiv = styled.div`
 
 function EventList({ currentDay, day, date }) {
   const history = useHistory();
-
   const dateString = date.toLocaleString().substring(0,12).replaceAll(' ', '');
   const eventArr = store.getState().event.byDate[dateString];
   let eventList = [];

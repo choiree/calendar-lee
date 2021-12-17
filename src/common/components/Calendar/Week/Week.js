@@ -1,7 +1,6 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import store from '../../../../app/configureStore';
 import EventList from '../EventList/EventList';
 import Time from '../Time/Time';
 
@@ -14,8 +13,7 @@ const StyledDayDiv = styled.div`
 
 function Week({ onOpenDaily }) {
   onOpenDaily(false);
-
-  const current = store.getState().calendar;
+  const current = useSelector(state => state.calendar);
   const thisWeek = [];
   const dates = [];
 
@@ -26,11 +24,10 @@ function Week({ onOpenDaily }) {
         current.displayedMonth - 1,
         current.displayedDate + (i - current.displayedDay),
       );
+    let day = resultDay.getDate();
 
     dates.push(resultDay);
-    let day = resultDay.getDate();
     day = String(day).length === 1 ? '0' + day : day;
-
     thisWeek[i] = day;
   }
 
@@ -49,18 +46,3 @@ function Week({ onOpenDaily }) {
 }
 
 export default Week;
-
-/*
-const history = useHistory();
-
-const time = Array.from(Array(24).keys());
-
-time.map((hour) => (
-  <Row
-    id={hour}
-    onClick={() => {
-      history.push(`/events/new?time=${hour}`)
-    }}>
-
-  </Row>))
-*/

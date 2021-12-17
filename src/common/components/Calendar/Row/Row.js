@@ -12,18 +12,21 @@ function Row({ hour, day, eventList, eventArr, dateString }) {
     }
   });
 
-
   return (
     <>
-      {title ?
-        <Link to = {{
-          pathname:`/events/:${eventId}`,
-          state:{dateString}
-        }}><div>{title}</div></Link> :
-        <Link to = {{
-          pathname:'/events/new',
-          state:{hour, day},
-        }}>+</Link>
+      {title
+        ? <Link to = {{
+            pathname:`/events/:${eventId}`,
+            state:{dateString}
+          }}>
+            <div>{title}</div>
+          </Link>
+        : <Link to = {{
+            pathname:'/events/new',
+            state:{hour, day},
+          }}>
+            +
+          </Link>
       }
     </>
   );

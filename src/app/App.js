@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-
 import Header from '../common/components/Header/Header';
 import Daily from '../common/components/Calendar/Daily/Daily';
 import Week from '../common/components/Calendar/Week/Week';
@@ -11,8 +10,8 @@ import Detail from '../common/components/Event/Detail/Detail';
 
 function App() {
   const dispatch = useDispatch();
-  const [isDaily, setIsDaily] = useState(false);
   const date = useSelector((state) => state.calendar);
+  const [isDaily, setIsDaily] = useState(false);
 
   const handleChangePreDay = () => {
     dispatch(showPreviousDate());
@@ -20,7 +19,7 @@ function App() {
 
   const handleChangeNextDay = () => {
     dispatch(showNextDate());
-  }
+  };
 
   const handleChangePreWeek = () => {
     dispatch(showPreviousWeek());
@@ -28,7 +27,7 @@ function App() {
 
   const handleChangeNextWeek = () => {
     dispatch(showNextWeek());
-  }
+  };
 
   return (
     <div>
@@ -39,7 +38,8 @@ function App() {
           }
           onChangePre={handleChangePreDay}
           onChangeNext={handleChangeNextDay}
-      />}
+        />
+      }
       {!isDaily &&
         <Header
           displayDate={
@@ -47,7 +47,8 @@ function App() {
           }
           onChangePre={handleChangePreWeek}
           onChangeNext={handleChangeNextWeek}
-      />}
+        />
+      }
       <Switch>
         <Route path="/" exact>
           <Redirect to="/calendar" />
