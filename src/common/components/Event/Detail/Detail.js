@@ -27,16 +27,24 @@ function Detail() {
   const location = useLocation();
   const history = useHistory();
   const events = useSelector((state) => state.event.byIds);
-
   const id = useParams().eventId;
   const eventId = id.replace(':', '');
+  const allIds = useSelector(state => state.event.allIds);
+  let invailed = false;
+
+  if (allIds) {
+    if (allIds.every(id => id === eventId)) {
+      invailed = true;
+    }
+  }
+
   const eventDetail = events[eventId];
-  const title = eventDetail.title;
-  const contnet = eventDetail.content;
-  const startTime = eventDetail.startTime;
-  const endTime = eventDetail.endTime;
-  const dateString = location.state.dateString;
-  const dateStr = dateString.substring(0,4) + '-' + dateString.substring(5,7) + '-' + dateString.substring(8,10);
+  const title = eventDetail?.title;
+  const contnet = eventDetail?.content;
+  const startTime = eventDetail?.startTime;
+  const endTime = eventDetail?.endTime;
+  const dateString = location.state?.dateString;
+  const dateStr = dateString?.substring(0,4) + '-' + dateString?.substring(5,7) + '-' + dateString?.substring(8,10);
   const [eventTitle, setEventTile] = useState(title);
   const [eventContent, setEventContent] = useState(contnet);
   const [selectedStart, setSelectedStart] = useState(startTime);
@@ -46,6 +54,7 @@ function Detail() {
   const modifySelectDate = selectedDate.replaceAll('-', '.');
   const eventArr = store.getState().event.byDate[modifySelectDate];
   let newEventArr;
+
   if (eventArr) {
     newEventArr = eventArr.filter((item) => item !== Number(eventId));
   }
@@ -92,93 +101,94 @@ function Detail() {
 
   return (
     <>
-      {eventDetail &&
-        <StyledEventDiv>
-          <label for="date">날짜 : </label>
-          <input
-            type="date"
-            id="date"
-            name="trip-start"
-            disabled={isDisabled}
-            value={selectedDate}
-            onChange={handleChangeDate}
-            className='input'
-          />
-          <input
-            type='text'
-            disabled={isDisabled}
-            value={eventTitle}
-            onChange={hadleChangeTitle}
-            className='input'
-          />
-          <textarea
-            value={eventContent}
-            onChange={hadleChangeContent}
-            className='input'
-            rows='5'
-            cols='22'
-            disabled={isDisabled}
-          >
-          </textarea>
-        <div>
-          <label htmlFor='start-time'>시작시간 : </label>
-          <select
-            name='start'
-            id='start-time'
-            value={selectedStart}
-            onChange={handleChangeStart}
-            disabled={isDisabled}
-            className='input'
-          >
-            {eventList.length
-              ? Array.from(Array(24).keys()).map((hour) => {
-                if (eventList.some((event) => {return event.startTime <= hour && event.endTime > hour})) {
-                  return(<option value={hour} disabled>{hour}:00</option>);
-                }
-                return(<option value={hour}>{hour}:00</option>);
-                })
-              : Array.from(Array(24).keys()).map((hour) => (
-                <option key={hour} value={hour}>
-                  {hour}:00
-                </option>
-              ))
-            }
-          </select>
+      {invailed ? <div>유효하지 않은 아이디입니다</div> :
+        eventDetail &&
+          <StyledEventDiv>
+            <label htmlFor="date">날짜 : </label>
+            <input
+              type="date"
+              id="date"
+              name="trip-start"
+              disabled={isDisabled}
+              value={selectedDate}
+              onChange={handleChangeDate}
+              className='input'
+            />
+            <input
+              type='text'
+              disabled={isDisabled}
+              value={eventTitle}
+              onChange={hadleChangeTitle}
+              className='input'
+            />
+            <textarea
+              value={eventContent}
+              onChange={hadleChangeContent}
+              className='input'
+              rows='5'
+              cols='22'
+              disabled={isDisabled}
+            >
+            </textarea>
+          <div>
+            <label htmlFor='start-time'>시작시간 : </label>
+            <select
+              name='start'
+              id='start-time'
+              value={selectedStart}
+              onChange={handleChangeStart}
+              disabled={isDisabled}
+              className='input'
+            >
+              {eventList.length
+                ? Array.from(Array(24).keys()).map((hour) => {
+                  if (eventList.some((event) => {return event.startTime <= hour && event.endTime > hour})) {
+                    return(<option value={hour} disabled>{hour}:00</option>);
+                  }
+                  return(<option value={hour}>{hour}:00</option>);
+                  })
+                : Array.from(Array(24).keys()).map((hour) => (
+                  <option key={hour} value={hour}>
+                    {hour}:00
+                  </option>
+                ))
+              }
+            </select>
 
-          <label htmlFor='end-time'> 끝나는 시간 : </label>
-          <select
-            name='end'
-            id='end-time'
-            value={selectedEnd}
-            onChange={handleChangeEnd}
-            disabled={isDisabled}
-            className='input'
-          >
-            {eventList.length
-              ? Array.from(Array(24).keys()).map((hour) => {
-                if(eventList.some((event) => {return event.startTime > selectedStart &&  event.startTime < hour})) {
-                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                }
-                if (selectedStart > hour) {
-                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                }
-                if (eventList.some((event) => {return event.startTime <= hour && event.endTime > hour})) {
-                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                }
-                return(<option value={hour + 1}>{hour + 1}:00</option>);
+            <label htmlFor='end-time'> 끝나는 시간 : </label>
+            <select
+              name='end'
+              id='end-time'
+              value={selectedEnd}
+              onChange={handleChangeEnd}
+              disabled={isDisabled}
+              className='input'
+            >
+              {eventList.length
+                ? Array.from(Array(24).keys()).map((hour) => {
+                  if(eventList.some((event) => {return event.startTime > selectedStart &&  event.startTime < hour})) {
+                    return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                  }
+                  if (selectedStart > hour) {
+                    return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                  }
+                  if (eventList.some((event) => {return event.startTime <= hour && event.endTime > hour})) {
+                    return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                  }
+                  return(<option value={hour + 1}>{hour + 1}:00</option>);
+                  })
+                : Array.from(Array(24).keys()).map((hour) => {
+                  if (selectedStart > hour) {
+                    return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                  }
+                  return(<option key={hour} value={hour + 1}>{hour + 1}:00</option>);
                 })
-              : Array.from(Array(24).keys()).map((hour) => {
-                if (selectedStart > hour) {
-                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                }
-                return(<option key={hour} value={hour + 1}>{hour + 1}:00</option>);
-              })
-            }
-          </select>
-        </div>
-          <button onClick={handleModifyBtn}>수정</button>
-          <button onClick={handleDeleteBtn}>삭제</button>
-        </StyledEventDiv>
+              }
+            </select>
+          </div>
+            <button onClick={handleModifyBtn}>수정</button>
+            <button onClick={handleDeleteBtn}>삭제</button>
+          </StyledEventDiv>
       }
     </>
   );
