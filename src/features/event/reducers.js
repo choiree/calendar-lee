@@ -1,5 +1,5 @@
 import { SAVE_NEW_EVENT, DELETE_EVENT, MODIFY_EVENT } from './types';
-import { cloneDeep } from "lodash";
+import { cloneDeep } from 'lodash';
 
 const initialState = {
   allIds: [],

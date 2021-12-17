@@ -50,19 +50,19 @@ function App() {
         />
       }
       <Switch>
-        <Route path="/" exact>
-          <Redirect to="/calendar" />
+        <Route path='/' exact>
+          <Redirect to='/calendar' />
         </Route>
-        <Route path="/calendar" exact>
+        <Route path='/calendar' exact>
           <Daily onOpenDaily={setIsDaily}/>
         </Route>
-        <Route path="/week">
+        <Route path='/week'>
           <Week onOpenDaily={setIsDaily}/>
         </Route>
-        <Route path="/events/new" exact>
+        <Route path='/events/new' exact>
           <New />
         </Route>
-        <Route path="/events/:eventId" exact>
+        <Route path='/events/:eventId' exact>
           <Detail />
         </Route>
       </Switch>

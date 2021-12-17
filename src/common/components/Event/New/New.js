@@ -39,6 +39,7 @@ function New() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     dispatch(saveNewEvent(titleValue, contentValue, selectedStart, selectedEnd, resultDay));
     history.goBack();
   };
@@ -53,6 +54,7 @@ function New() {
 
   const handleChangeStart = (e) => {
     setSelectedStart(e.target.value);
+    console.log(5555,selectedStart);
   };
 
   const handleChangeEnd = (e) => {
@@ -107,16 +109,23 @@ function New() {
           >
             {eventList.length
               ? Array.from(Array(24).keys()).map((hour) => {
+                if(eventList.some((event) => {return event.startTime > selectedStart &&  event.startTime < hour})) {
+                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                }
+                if (selectedStart > hour) {
+                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                }
                 if (eventList.some((event) => {return event.startTime <= hour && event.endTime > hour})) {
                   return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
                 }
                 return(<option value={hour + 1}>{hour + 1}:00</option>);
                 })
-              : Array.from(Array(24).keys()).map((hour) => (
-                <option key={hour} value={hour + 1}>
-                  {hour + 1}:00
-                </option>
-              ))
+              : Array.from(Array(24).keys()).map((hour) => {
+                if (selectedStart > hour) {
+                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                }
+                return(<option key={hour} value={hour + 1}>{hour + 1}:00</option>);
+              })
             }
           </select>
         </div>

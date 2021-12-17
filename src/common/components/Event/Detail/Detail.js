@@ -27,6 +27,7 @@ function Detail() {
   const location = useLocation();
   const history = useHistory();
   const events = useSelector((state) => state.event.byIds);
+
   const id = useParams().eventId;
   const eventId = id.replace(':', '');
   const eventDetail = events[eventId];
@@ -35,15 +36,19 @@ function Detail() {
   const startTime = eventDetail.startTime;
   const endTime = eventDetail.endTime;
   const dateString = location.state.dateString;
-  const dateStr = dateString.substring(0,4) + '-' + dateString.substring(5,7) + '-' + dateString.substring(8,10)
-  const eventArr = store.getState().event.byDate[dateString];
-  const newEventArr = eventArr.filter((item) => item !== Number(eventId));
+  const dateStr = dateString.substring(0,4) + '-' + dateString.substring(5,7) + '-' + dateString.substring(8,10);
   const [eventTitle, setEventTile] = useState(title);
   const [eventContent, setEventContent] = useState(contnet);
   const [selectedStart, setSelectedStart] = useState(startTime);
   const [selectedEnd, setSelectedEnd] = useState(endTime);
-  const [selectedDate, setSelectedDate] = useState(dateStr);
   const [isDisabled, setIsDisabled] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(dateStr);
+  const modifySelectDate = selectedDate.replaceAll('-', '.');
+  const eventArr = store.getState().event.byDate[modifySelectDate];
+  let newEventArr;
+  if (eventArr) {
+    newEventArr = eventArr.filter((item) => item !== Number(eventId));
+  }
   let eventList = [];
 
   if (newEventArr) {
@@ -151,16 +156,23 @@ function Detail() {
           >
             {eventList.length
               ? Array.from(Array(24).keys()).map((hour) => {
+                if(eventList.some((event) => {return event.startTime > selectedStart &&  event.startTime < hour})) {
+                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                }
+                if (selectedStart > hour) {
+                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                }
                 if (eventList.some((event) => {return event.startTime <= hour && event.endTime > hour})) {
                   return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
                 }
                 return(<option value={hour + 1}>{hour + 1}:00</option>);
                 })
-              : Array.from(Array(24).keys()).map((hour) => (
-                <option key={hour} value={hour + 1}>
-                  {hour + 1}:00
-                </option>
-              ))
+              : Array.from(Array(24).keys()).map((hour) => {
+                if (selectedStart > hour) {
+                  return(<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                }
+                return(<option key={hour} value={hour + 1}>{hour + 1}:00</option>);
+              })
             }
           </select>
         </div>
