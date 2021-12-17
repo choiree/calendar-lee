@@ -1,5 +1,5 @@
-import { saveNewEvent, deleteEvent } from './actions';
+import { saveNewEvent, deleteEvent, modifyEvent } from './actions';
 import eventReducer from './reducers';
 
-export { saveNewEvent, deleteEvent };
+export { saveNewEvent, deleteEvent, modifyEvent };
 export default eventReducer;

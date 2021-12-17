@@ -57,7 +57,8 @@ function New() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(saveNewEvent(titleValue, contentValue, selectedStart, selectedEnd, resultDay));
-    history.push('/calendar');
+    // history.push('/calendar');
+    history.goBack();
     // console.log("지금데이", resultDay);
     // console.log("day값 : ", location.state.day, "캘린더저장날짜 : ", store.getState().calendar.displayedDate);
   };

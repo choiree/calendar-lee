@@ -1,4 +1,4 @@
-import { SAVE_NEW_EVENT, DELETE_EVENT } from './types';
+import { SAVE_NEW_EVENT, DELETE_EVENT, MODIFY_EVENT } from './types';
 import { merge, cloneDeep } from "lodash";
 
 const initialState = {
@@ -25,7 +25,7 @@ export default function eventReducer(state = initialState, action) {
     case SAVE_NEW_EVENT:{
       const { id, title, content, startTime, endTime, date } = action.payload;
       const dateString = date.toLocaleString().substring(0,12).replaceAll(' ', '');
-
+      //todo Delete 처럼 복사하고 푸시하는걸로 바꾸기
       return cloneDeep({
         ...state,
         allIds: [...state.allIds, id],
@@ -47,22 +47,38 @@ export default function eventReducer(state = initialState, action) {
     }
 
     case DELETE_EVENT:{
-      const {deleteId, currentDate } = action.payload;
-      console.log(123123,deleteId, currentDate);
+      const { deleteId, currentDate } = action.payload;
       const newState = cloneDeep(state);
 
       const index = newState.allIds.indexOf(deleteId);
+      const filteredByDate = newState.byDate[currentDate].filter((item) => item !== Number(deleteId));
+
       newState.allIds.splice(index, 1);
-      const arr3 = newState.byDate[currentDate].filter((item) => item !== Number(deleteId));
-      console.log('arr33333', arr3);
-      // const arr = newState.byDate[currentDate];
-      // const index2 = arr.indexOf(deleteId);
-      // arr.splice(index2, 1);
-      newState.byDate[currentDate] = arr3;
-      console.log(newState.byDate[currentDate]);
+      newState.byDate[currentDate] = filteredByDate;
       delete newState.byIds[deleteId];
 
-      console.log('newwwwwww',newState);
+      return newState;
+    }
+
+    case MODIFY_EVENT:{
+      const { modifyId, date, title, content, startTime, endTime, modifyDate } = action.payload;
+      const modifyDateStr = modifyDate.replaceAll('-', '.');
+      const newState = cloneDeep(state);
+
+      newState.byIds[modifyId].title = title;
+      newState.byIds[modifyId].content = content;
+      newState.byIds[modifyId].startTime = startTime;
+      newState.byIds[modifyId].endTime = endTime;
+      newState.byIds[modifyId].dateString = modifyDate;
+
+      const filteredByDate = newState.byDate[date].filter((item) => item !== Number(modifyId));
+      newState.byDate[date] = filteredByDate;
+
+      if (newState.byDate[modifyDateStr]) {
+        newState.byDate[modifyDateStr].push(Number(modifyId));
+      } else {
+        newState.byDate[modifyDateStr] = [Number(modifyId)];
+      }
 
       return newState;
     }
