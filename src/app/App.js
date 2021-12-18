@@ -38,6 +38,7 @@ function App() {
           }
           onChangePre={handleChangePreDay}
           onChangeNext={handleChangeNextDay}
+          onDailyOpen={setIsDaily}
         />
       }
       {!isDaily &&
@@ -47,6 +48,7 @@ function App() {
           }
           onChangePre={handleChangePreWeek}
           onChangeNext={handleChangeNextWeek}
+          onDailyOpen={setIsDaily}
         />
       }
       <Switch>
@@ -54,10 +56,10 @@ function App() {
           <Redirect to='/calendar' />
         </Route>
         <Route path='/calendar' exact>
-          <Daily onOpenDaily={setIsDaily}/>
+          <Daily onOpenDaily={setIsDaily} />
         </Route>
         <Route path='/week'>
-          <Week onOpenDaily={setIsDaily}/>
+          <Week onOpenDaily={setIsDaily} />
         </Route>
         <Route path='/events/new' exact>
           <New />

@@ -36,5 +36,5 @@ export function modifyEvent(modifyId, date, title, content, startTime, endTime, 
       endTime,
       modifyDate,
     }
-  }
+  };
 }

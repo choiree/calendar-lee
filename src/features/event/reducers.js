@@ -8,11 +8,12 @@ const initialState = {
 };
 
 export default function eventReducer(state = initialState, action) {
+  const newState = cloneDeep(state);
+
   switch (action.type) {
     case SAVE_NEW_EVENT: {
-      const newState = cloneDeep(state);
       const { id, title, content, startTime, endTime, date } = action.payload;
-      const dateString = date.toLocaleString().substring(0,12).replaceAll(' ', '');
+      const dateString = date.toLocaleString().substring(0, 12).replaceAll(' ', '');
 
       newState.allIds.push(id);
 
@@ -34,7 +35,6 @@ export default function eventReducer(state = initialState, action) {
     }
 
     case DELETE_EVENT: {
-      const newState = cloneDeep(state);
       const { deleteId, currentDate } = action.payload;
       const index = newState.allIds.indexOf(deleteId);
       const filteredByDate = newState.byDate[currentDate].filter((item) => item !== Number(deleteId));
@@ -47,7 +47,6 @@ export default function eventReducer(state = initialState, action) {
     }
 
     case MODIFY_EVENT: {
-      const newState = cloneDeep(state);
       const { modifyId, date, title, content, startTime, endTime, modifyDate } = action.payload;
       const modifyDateStr = modifyDate.replaceAll('-', '.');
       const filteredByDate = newState.byDate[date].filter((item) => item !== Number(modifyId));

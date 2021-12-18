@@ -11,9 +11,7 @@ const StyledDayDiv = styled.div`
   width: 200px;
 `;
 
-function Daily({ onOpenDaily }) {
-  onOpenDaily(true);
-
+function Daily() {
   const currentDay = useSelector(state => state.calendar);
   const day = currentDay.displayedDay;
   const week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
@@ -21,7 +19,7 @@ function Daily({ onOpenDaily }) {
   return (
     <StyledDayDiv>
       <Time />
-      <EventList currentDay={currentDay.displayedDate} day={week[day]} date={currentDay.currentDate}/>
+      <EventList currentDay={currentDay.displayedDate} day={week[day]} date={currentDay.currentDate} />
     </StyledDayDiv>
   );
 }

@@ -11,13 +11,12 @@ const StyledDayDiv = styled.div`
   width: 800px;
 `;
 
-function Week({ onOpenDaily }) {
-  onOpenDaily(false);
+function Week() {
   const current = useSelector(state => state.calendar);
   const thisWeek = [];
   const dates = [];
 
-  for(let i = 0; i < 7; i++) {
+  for (let i = 0; i < 7; i++) {
     const resultDay =
       new Date(
         current.displayedYear,
@@ -34,13 +33,13 @@ function Week({ onOpenDaily }) {
   return (
     <StyledDayDiv>
       <Time />
-      <EventList currentDay={thisWeek[0]} day={'SUN'} date={dates[0]}/>
-      <EventList currentDay={thisWeek[1]} day={'MON'} date={dates[1]}/>
-      <EventList currentDay={thisWeek[2]} day={'TUE'} date={dates[2]}/>
-      <EventList currentDay={thisWeek[3]} day={'WED'} date={dates[3]}/>
-      <EventList currentDay={thisWeek[4]} day={'THU'} date={dates[4]}/>
-      <EventList currentDay={thisWeek[5]} day={'FRI'} date={dates[5]}/>
-      <EventList currentDay={thisWeek[6]} day={'SAT'} date={dates[6]}/>
+      <EventList currentDay={thisWeek[0]} day={'SUN'} date={dates[0]} />
+      <EventList currentDay={thisWeek[1]} day={'MON'} date={dates[1]} />
+      <EventList currentDay={thisWeek[2]} day={'TUE'} date={dates[2]} />
+      <EventList currentDay={thisWeek[3]} day={'WED'} date={dates[3]} />
+      <EventList currentDay={thisWeek[4]} day={'THU'} date={dates[4]} />
+      <EventList currentDay={thisWeek[5]} day={'FRI'} date={dates[5]} />
+      <EventList currentDay={thisWeek[6]} day={'SAT'} date={dates[6]} />
     </StyledDayDiv>
   );
 }

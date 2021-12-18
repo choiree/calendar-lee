@@ -28,21 +28,30 @@ const StyledDateWrapperDiv = styled.div`
 `;
 
 // TODO: Create your own header.
-export default function Header ({ displayDate, onChangePre, onChangeNext }) {
+export default function Header({ displayDate, onChangePre, onChangeNext, onDailyOpen }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const handleChangeToday = () => {
     const today = new Date();
+
     dispatch(showToday(today));
     history.push('/calendar');
+  };
+
+  const handleDayClick = () => {
+    onDailyOpen(true);
+  };
+
+  const handleWeekClick = () => {
+    onDailyOpen(false);
   };
 
   return (
     <StyledHeader>
       <nav>
         <ul>
-          <li><Link to='/calendar'>Daily</Link></li>
-          <li><Link to='/week'>Weekly</Link></li>
+          <li onClick={handleDayClick}><Link to='/calendar'>Daily</Link></li>
+          <li onClick={handleWeekClick}><Link to='/week'>Weekly</Link></li>
         </ul>
       </nav>
       <StyledDateWrapperDiv>
