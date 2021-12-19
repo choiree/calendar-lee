@@ -21,7 +21,7 @@ const StyledHeader = styled.header`
 `;
 
 const StyledDateWrapperDiv = styled.div`
-  margin-left:100px;
+  margin-left: 100px;
   display: flex;
   justify-content: space-around;
   align-items: center;

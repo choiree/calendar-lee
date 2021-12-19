@@ -25,11 +25,9 @@ export default function eventReducer(state = initialState, action) {
         dateString,
       };
 
-      if (newState.byDate[dateString]) {
-        newState.byDate[dateString].push(Number(id));
-      } else {
-        newState.byDate[dateString] = [Number(id)];
-      }
+      newState.byDate[dateString]
+        ? newState.byDate[dateString].push(Number(id))
+        : newState.byDate[dateString] = [Number(id)];
 
       return newState;
     }
@@ -58,11 +56,9 @@ export default function eventReducer(state = initialState, action) {
       newState.byIds[modifyId].endTime = endTime;
       newState.byIds[modifyId].dateString = modifyDate;
 
-      if (newState.byDate[modifyDateStr]) {
-        newState.byDate[modifyDateStr].push(Number(modifyId));
-      } else {
-        newState.byDate[modifyDateStr] = [Number(modifyId)];
-      }
+      newState.byDate[modifyDateStr]
+        ? newState.byDate[modifyDateStr].push(Number(modifyId))
+        : newState.byDate[modifyDateStr] = [Number(modifyId)];
 
       return newState;
     }

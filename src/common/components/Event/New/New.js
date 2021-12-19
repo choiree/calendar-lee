@@ -9,7 +9,7 @@ import { saveNewEvent } from '../../../../features/event';
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly
+  justify-content: space-evenly;
   align-items: center;
   height: 300px;
   width: 400px;
@@ -106,26 +106,29 @@ function New() {
             value={selectedEnd}
             onChange={handleChangeEnd}
           >
-            {eventList.length
-              ? Array.from(Array(24).keys()).map((hour) => {
-                if (eventList.some((event) => { return event.startTime > selectedStart && event.startTime < hour })) {
-                  return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                }
+            {Array.from(Array(24).keys()).map((hour) => {
+              if (!eventList.length) {
                 if (selectedStart > hour) {
                   return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
                 }
-                if (eventList.some((event) => { return event.startTime <= hour && event.endTime > hour })) {
-                  return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                }
-                return (<option value={hour + 1}>{hour + 1}:00</option>);
-              })
-              : Array.from(Array(24).keys()).map((hour) => {
-                if (selectedStart > hour) {
-                  return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                }
+
                 return (<option key={hour} value={hour + 1}>{hour + 1}:00</option>);
-              })
-            }
+              }
+
+              if (eventList.some((event) => { return event.startTime > selectedStart && event.startTime < hour })) {
+                return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
+              }
+
+              if (selectedStart > hour) {
+                return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
+              }
+
+              if (eventList.some((event) => { return event.startTime <= hour && event.endTime > hour })) {
+                return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
+              }
+
+              return (<option value={hour + 1}>{hour + 1}:00</option>);
+            })}
           </select>
         </div>
         <input type='submit' value='Save' />

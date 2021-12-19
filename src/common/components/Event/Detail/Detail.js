@@ -137,19 +137,19 @@ function Detail() {
               disabled={isDisabled}
               className='input'
             >
-              {eventList.length
-                ? Array.from(Array(24).keys()).map((hour) => {
-                  if (eventList.some((event) => { return event.startTime <= hour && event.endTime > hour })) {
-                    return (<option value={hour} disabled>{hour}:00</option>);
-                  }
-                  return (<option value={hour}>{hour}:00</option>);
-                })
-                : Array.from(Array(24).keys()).map((hour) => (
+              {Array.from(Array(24).keys()).map((hour) => {
+                if (!eventList.length) {
                   <option key={hour} value={hour}>
                     {hour}:00
                   </option>
-                ))
-              }
+                }
+
+                if (eventList.some((event) => { return event.startTime <= hour && event.endTime > hour })) {
+                  return (<option value={hour} disabled>{hour}:00</option>);
+                }
+
+                return (<option value={hour}>{hour}:00</option>);
+              })}
             </select>
 
             <label htmlFor='end-time'> 끝나는 시간 : </label>
@@ -161,26 +161,29 @@ function Detail() {
               disabled={isDisabled}
               className='input'
             >
-              {eventList.length
-                ? Array.from(Array(24).keys()).map((hour) => {
-                  if (eventList.some((event) => { return event.startTime > selectedStart && event.startTime < hour })) {
-                    return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                  }
+              {Array.from(Array(24).keys()).map((hour) => {
+                if (!eventList.length) {
                   if (selectedStart > hour) {
                     return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
                   }
-                  if (eventList.some((event) => { return event.startTime <= hour && event.endTime > hour })) {
-                    return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                  }
-                  return (<option value={hour + 1}>{hour + 1}:00</option>);
-                })
-                : Array.from(Array(24).keys()).map((hour) => {
-                  if (selectedStart > hour) {
-                    return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                  }
+
                   return (<option key={hour} value={hour + 1}>{hour + 1}:00</option>);
-                })
-              }
+                }
+
+                if (eventList.some((event) => { return event.startTime > selectedStart && event.startTime < hour })) {
+                  return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                }
+
+                if (selectedStart > hour) {
+                  return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                }
+
+                if (eventList.some((event) => { return event.startTime <= hour && event.endTime > hour })) {
+                  return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
+                }
+
+                return (<option value={hour + 1}>{hour + 1}:00</option>);
+              })}
             </select>
           </div>
           <button onClick={handleModifyBtn}>수정</button>
