@@ -11,7 +11,7 @@ import Detail from '../common/components/Event/Detail/Detail';
 function App() {
   const dispatch = useDispatch();
   const date = useSelector((state) => state.calendar);
-  const [isDaily, setIsDaily] = useState(false);
+  const [isDaily, setIsDaily] = useState(true);
 
   const handleChangePreDay = () => {
     dispatch(showPreviousDate());

@@ -174,11 +174,7 @@ function Detail() {
                   return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
                 }
 
-                if (selectedStart > hour) {
-                  return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
-                }
-
-                if (eventList.some((event) => { return event.startTime <= hour && event.endTime > hour })) {
+                if (eventList.some((event) => { return event.startTime <= hour && event.endTime > hour }) || selectedStart > hour) {
                   return (<option value={hour + 1} disabled>{hour + 1}:00</option>);
                 }
 
